@@ -1,4 +1,4 @@
--- MariaDB dump 10.19  Distrib 10.4.27-MariaDB, for Win64 (AMD64)
+-- MariaDB dump 10.19  Distrib 10.4.27-MariaDB, for osx10.10 (x86_64)
 --
 -- Host: localhost    Database: azure_db
 -- ------------------------------------------------------
@@ -50,11 +50,11 @@ DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
-  `image` text DEFAULT NULL,
-  `detail` text DEFAULT NULL,
-  `price` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `image` varchar(50) NOT NULL,
+  `description` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `image` (`image`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,6 +63,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+INSERT INTO `categories` VALUES (1,'Beach','url','blah2'),(2,'Mountains','url1','blah2'),(3,'Hiking','url2','blah2');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -76,10 +77,14 @@ DROP TABLE IF EXISTS `rating`;
 CREATE TABLE `rating` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `rating` float DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `travel_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `tra_id` FOREIGN KEY (`id`) REFERENCES `travels` (`id`),
+  CONSTRAINT `category_id` FOREIGN KEY (`id`) REFERENCES `categories` (`id`),
+  CONSTRAINT `travel_id` FOREIGN KEY (`id`) REFERENCES `travels` (`id`),
   CONSTRAINT `user_id` FOREIGN KEY (`id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,6 +93,7 @@ CREATE TABLE `rating` (
 
 LOCK TABLES `rating` WRITE;
 /*!40000 ALTER TABLE `rating` DISABLE KEYS */;
+INSERT INTO `rating` VALUES (2,3,1,3,3);
 /*!40000 ALTER TABLE `rating` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,14 +106,16 @@ DROP TABLE IF EXISTS `travels`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `travels` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(50) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `images` text DEFAULT NULL,
   `detail` text DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
   `location` text DEFAULT NULL,
   `day` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `cat_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `cat_id` FOREIGN KEY (`id`) REFERENCES `categories` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,6 +124,7 @@ CREATE TABLE `travels` (
 
 LOCK TABLES `travels` WRITE;
 /*!40000 ALTER TABLE `travels` DISABLE KEYS */;
+INSERT INTO `travels` VALUES (1,'ENJOY WARM BEACH VIBES','url','blah2',1500,'Bali, Indonesia',14,1),(2,'EVEREST','url','blah2',3000,'Himalaya',7,2),(3,'LET\'S WAALK','url','blah2',2000,'Switzerland',7,3);
 /*!40000 ALTER TABLE `travels` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -134,7 +143,7 @@ CREATE TABLE `users` (
   `role` enum('USER','ADMIN') DEFAULT 'USER',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -143,6 +152,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'Naraa','pass123','naraa@gmail.com','USER'),(2,'Saraa','pass123','saraa@gmail.com','USER'),(3,'Ganaa','pass123','ganaa@gmail.com','USER');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -155,4 +165,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-06  0:52:13
+-- Dump completed on 2023-03-06 17:35:52
